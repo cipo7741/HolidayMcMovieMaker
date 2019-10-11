@@ -47,6 +47,6 @@ _deps
 # user specific
 
 data
-HolidayMovieMaker.geany
-HolidayVideoMaker
+HolidayMcMovieMaker.geany
+HolidayMcMovieMaker
 MyHolidayVideo.avi

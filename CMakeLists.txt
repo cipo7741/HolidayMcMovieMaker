@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.7)
-project(HolidayVideoMaker)
+project(HolidayMcMovieMaker)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -20,10 +20,10 @@ find_package( Boost REQUIRED COMPONENTS system chrono date_time filesystem)
 get_property(inc_dirs DIRECTORY PROPERTY INCLUDE_DIRECTORIES)
 message("inc_dirs = ${inc_dirs}")
 
-add_executable(HolidayVideoMaker ${SOURCE_FILES})
+add_executable(HolidayMcMovieMaker ${SOURCE_FILES})
 
-target_link_libraries(HolidayVideoMaker ${OpenCV_LIBS})
-target_link_libraries(HolidayVideoMaker ${Boost_LIBRARIES})
+target_link_libraries(HolidayMcMovieMaker ${OpenCV_LIBS})
+target_link_libraries(HolidayMcMovieMaker ${Boost_LIBRARIES})
 #target_link_libraries( HolidayVideoMaker thirdparty )
 
 #-lpthread -lm -DBOOST_LOG_DYN_LINK -lboost_log -lboost_thread -lpthread)

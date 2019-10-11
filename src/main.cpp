@@ -14,9 +14,6 @@ std::vector<std::string> listImageFilesInDir(std::vector<std::string> &extension
                 cv::Mat src1 = cv::imread( itr->path().string() );
                 if( !src1.empty() ) {
                     nFilesFound.emplace_back(itr->path().string());
-                    //cv::imshow( itr->path().filename().string() , src1 );
-                    //cv::waitKey(0);
-                    //cv::destroyWindow(itr->path().filename().string()); //destroy the created window
                 }
             } else {
                 std::cout << "Sorry, the file extension " << itr->path().extension() << " is not supported." << std::endl;
@@ -35,8 +32,8 @@ double getTransitionWeight(int current, int start, int max){
     if(current <= start){
         return 0.0;
     } else {
-        x = current - start;
-        return (double) x / max;
+        double x = current - start;
+        return (double) x / (max - start);
     }
 }
 
@@ -45,43 +42,58 @@ int main( void ) {
     std::vector<std::string> nAllowedExtensions = {".png",".jpg",".JPG"};
     std::vector<std::string> imageFiles = listImageFilesInDir(nAllowedExtensions);
     
-    int frames_per_second = 10;
+    int frames_per_second = 20;
+    int img_repeat = 60;
+    int transition_start = 40;
+    int num_of_images = imageFiles.size();
+    
+    std::sort(imageFiles.begin(), imageFiles.end(),
+          [] (std::string const& a, std::string const& b) { return a < b; });
 
     if(imageFiles.size() > 0){
         cv::Mat tmp_frame = cv::imread(imageFiles[0]);
-        int frame_width = static_cast<int>(tmp_frame.cols); //get the width of frames of the video
-        std::cout << frame_width << std::endl; 
-        int frame_height = static_cast<int>(tmp_frame.rows); //get the height of frames of the video
-        std::cout << frame_height << std::endl; 
+        int frame_width = static_cast<int>(tmp_frame.cols);
+        int frame_height = static_cast<int>(tmp_frame.rows);
         cv::Size frame_size(frame_width, frame_height);
-        //Create and initialize the VideoWriter object 
         cv::VideoWriter oVideoWriter("MyHolidayVideo.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), frames_per_second, frame_size, true); 
-        //If the VideoWriter object is not initialized successfully, exit the program
         if (oVideoWriter.isOpened() == false) {
             std::cout << "Cannot save the video to a file" << std::endl;
-            std::cin.get(); //wait for any key press
+            std::cin.get();
             return -1;
         }
-        for(long unsigned int i = 0; i < imageFiles.size(); i++){
-            std::string imageFile = imageFiles[i];
+        for(int imageIndex = 0; imageIndex < num_of_images; imageIndex++){
+            std::string imageFile = imageFiles[imageIndex];
             std::cout << imageFile << std::endl;
             cv::Mat frame = cv::imread(imageFile);
-            if(i < imageFiles.size()-1){
-                std::string nextImageFile = imageFiles[i];
-                cv::Mat nextFrame = cv::imread(imageFile);
+            if(imageIndex < num_of_images-1){
+                std::string nextImageFile = imageFiles[imageIndex+1];
+                cv::Mat nextFrame = cv::imread(nextImageFile);
+                //cv::imshow("frame", frame);
+                //cv::waitKey();
+                //cv::imshow("nextFrame", nextFrame);
+                //cv::waitKey();
+                //cv::addWeighted( frame, 0.5, nextFrame, 0.5, 0.0, frame);
+                //cv::imshow("weighted", frame);
+                //cv::waitKey();
+                for(int imageRepeatIndex = 0; imageRepeatIndex < img_repeat; imageRepeatIndex++){
+                    if (imageRepeatIndex >= transition_start){
+                        double alpha = getTransitionWeight(imageRepeatIndex, transition_start, img_repeat);
+                        //std::cout << alpha << std::endl;
+                        double beta = ( 1.0 - alpha );
+                        cv::Mat dst;
+                        cv::addWeighted( frame, beta, nextFrame, alpha, 0.0, dst);
+                        oVideoWriter.write(dst);
+                        //cv::addWeighted( frame, 0.5, nextFrame, 0.5, 0.0, dst);
+                    } else {
+                        oVideoWriter.write(frame); 
+                    }
+                }
+            } else {
+                for(int imageRepeatIndex = 0; imageRepeatIndex < img_repeat; imageRepeatIndex++){
+                    oVideoWriter.write(frame);
+                }
             }
-            //cv::imshow( imageFile , frame );
-            //cv::waitKey(0);
-            //cv::destroyWindow( imageFile ); //destroy the created window
-            for(int i = 0; i < 100; i++){
-                
-                alpha = (double) alpha_slider/alpha_slider_max ;
-                beta = ( 1.0 - alpha );
-                addWeighted( src1, alpha, src2, beta, 0.0, dst);
-                imshow( "Linear Blend", dst );
-                
-                oVideoWriter.write(frame); 
-            }
+            
         }
         oVideoWriter.release();
     }
