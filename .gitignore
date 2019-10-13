@@ -46,7 +46,8 @@ _deps
 
 # user specific
 
-data
+exampleImages
 HolidayMcMovieMaker.geany
 HolidayMcMovieMaker
 MyHolidayVideo.avi
+mcmoviemaker.log

@@ -10,8 +10,11 @@ include_directories( ${Boost_INCLUDE_DIRS} )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 
 include_directories( src )
+include_directories( src/thirdparty )
 
 set(SOURCE_FILES
+        src/HolidayMcMovieMaker.hpp
+        src/HolidayMcMovieMaker.cpp
         src/main.cpp)
 
 find_package( OpenCV REQUIRED )
