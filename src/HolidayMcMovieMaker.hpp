@@ -12,6 +12,7 @@
 
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 
 #include <iostream>
 
@@ -48,10 +49,11 @@ namespace mcmoviemaker {
         /// init logger, init configFilename
         HolidayMcMovieMaker(int argc, char **argv);
 
-        std::vector<std::string> listImageFilesInDir(std::vector<std::string> &extensions);
+        std::vector<std::string> listImageFilesInDir(const std::vector<std::string> &extensions);
         
         double getTransitionWeight(int current, int start, int max);
-
+        
+        cv::Mat fitImage(const cv::Mat& src, int width, int height);
         /**
          * Reads the xml config file into Config. @see Config
          * Starts SimpleController or FittingController.
@@ -64,7 +66,7 @@ namespace mcmoviemaker {
         /// logging parameter @see plog::Severity
         void initializeLogger(int plogLoggingSeverity = plog::info);
 
-        //std::string configFilename_;
+        //TODO std::string configFilename_;
         
         boost::filesystem::path imageDirectory_;
 

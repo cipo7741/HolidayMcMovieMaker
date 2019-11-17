@@ -20,7 +20,7 @@ namespace mc = mcmoviemaker;
 //    return (result < 0xff ? result : 0xff);
 //}
 
-/// Let's start the HolidayMcMovieMaker and run some tests afterwards.
+// Let's start the HolidayMcMovieMaker and run some tests afterwards.
 int main(int argc, char **argv) {
     /// 1. init HolidayMcMovieMaker with command line arguments
     /// 1.1. should contain the XML configuration file
