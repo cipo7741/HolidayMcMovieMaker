@@ -1,4 +1,4 @@
-# Holiday Video Maker (work in progress)
+# Holiday Video Maker (⚠️ work in progress)
 
 Given a directory it shall parse all images and create a video out of it.
 
