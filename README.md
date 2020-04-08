@@ -15,9 +15,9 @@ Given a directory it shall parse all images and create a video out of it.
 
 ## Getting Started
 
-	cmake .
-	make
-	./HolidayMcMovieMaker
+    for file in *.JPG; do convert $file -resize 1920x1440 -size 1920x1440 xc:black +swap -gravity center -composite black/$file; done
+
+    ffmpeg -framerate 1/3 -pattern_type glob -i 'black/*.JPG' -i ~/Music/KieLoKaz_-_01_-_Reunion_of_the_Spaceducks_Kielokaz_ID_365.mp3 -c:a copy -shortest -c:v libx264 -r 30 out.mp4    
 
 ### Prerequisites
 
